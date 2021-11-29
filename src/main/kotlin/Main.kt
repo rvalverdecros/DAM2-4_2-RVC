@@ -17,10 +17,16 @@ data class Tienda(val nombre: String, val clientes: List<Clientes>) {
     fun obtenerClientesOrdenadosPorPedidos(): List<Clientes> = clientes.sortedByDescending { it.pedidos.size }
 
     fun obtenerClientesConPedidosSinEngregar(): Set<Clientes> = clientes.filter { it.pedidos.any() { !it.estaEntregado } }.toSet()
+
+    fun obtenerProductosPedidos(): Set<Producto> = clientes.flatMap { it.obtenerProductosPedidos() }.toSet()
+
+    fun obtenerProductosPedidosPorTodos(): Set<Producto> = clientes.flatMap { it.obtenerProductosPedidos() }.toSet()
 }
 
     data class Clientes(val nombre: String, val ciudad: Ciudad, val pedidos: List<Pedido>) {
         override fun toString() = "$nombre from ${ciudad.nombre}"
+
+        fun obtenerProductosPedidos(): List<Producto> = pedidos.flatMap { it.productos.toList() }
     }
 
     data class Pedido(val productos: List<Producto>, val estaEntregado: Boolean)
